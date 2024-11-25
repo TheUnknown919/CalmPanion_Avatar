@@ -10,13 +10,13 @@ public class EmoteController : MonoBehaviour
     private ObjectSpawner spawner;
     private bool standing;
 
-    //string[] emote = new string[]
-    //{
-    //    "Rally",
-    //    "Walk",
-    //    "Sit",
-    //    "Stand"
-    //};
+    string[] emote = new string[]
+    {
+        "Rally",
+        "Walk",
+        "Sit",
+        "Stand"
+    };
 
     private void Start()
     {
@@ -41,12 +41,12 @@ public class EmoteController : MonoBehaviour
         }
     }
 
-    //public void RandomEmote()
-    //{
-    //    int w = Random.Range(0, emote.Length);
-    //    string chosenEmote = emote[w];
-    //    Emote(chosenEmote);
-    //}
+    public void RandomEmote()
+    {
+        int w = Random.Range(0, emote.Length);
+        string chosenEmote = emote[w];
+        Emote(chosenEmote);
+    }
     public void Emote(string emoteName)
     {
         print("emote trigger");

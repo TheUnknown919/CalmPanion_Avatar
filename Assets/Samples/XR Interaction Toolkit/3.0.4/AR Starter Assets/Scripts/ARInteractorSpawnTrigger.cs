@@ -1,5 +1,6 @@
 ﻿#if AR_FOUNDATION_PRESENT
 using UnityEngine.EventSystems;
+using UnityEngine.SceneManagement;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using UnityEngine.XR.Interaction.Toolkit.Inputs.Readers;
@@ -16,6 +17,10 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.ARStarterAssets
         /// <summary>
         /// The type of trigger to use to spawn an object.
         /// </summary>
+        public bool allClear = false;
+        private ObjectSpawner spawner;
+        public Vector3 lastHitPosition;
+        public Vector3 lastHitNormal;
         public enum SpawnTriggerType
         {
             /// <summary>
@@ -133,6 +138,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.ARStarterAssets
         /// </summary>
         void Start()
         {
+
             if (m_ObjectSpawner == null)
 #if UNITY_2023_1_OR_NEWER
                 m_ObjectSpawner = FindAnyObjectByType<ObjectSpawner>();
@@ -158,9 +164,9 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.ARStarterAssets
             if (m_AttemptSpawn)
             {
                 m_AttemptSpawn = false;
-
                 // Don't spawn the object if the tap was over screen space UI.
                 var isPointerOverUI = EventSystem.current != null && EventSystem.current.IsPointerOverGameObject(-1);
+                //if (!isPointerOverUI && m_ARInteractor.TryGetCurrentARRaycastHit(out var arRaycastHit))
                 if (!isPointerOverUI && m_ARInteractor.TryGetCurrentARRaycastHit(out var arRaycastHit))
                 {
                     if (!(arRaycastHit.trackable is ARPlane arPlane))
@@ -170,6 +176,18 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.ARStarterAssets
                         return;
 
                     m_ObjectSpawner.TrySpawnObject(arRaycastHit.pose.position, arPlane.normal);
+
+                    lastHitPosition = arRaycastHit.pose.position;
+                    lastHitNormal = arPlane.normal;
+                }else if(!m_ARInteractor.TryGetCurrentARRaycastHit(out var arRaycastHit2))
+                {
+                    spawner = FindObjectOfType<ObjectSpawner>();
+                    print("Trying now");
+                    if (arRaycastHit2.trackable is ARPlane arPlane)
+                    {
+                        Vector3 spawnPoint = arRaycastHit2.pose.position;
+                        spawner.prefabClone.transform.position = spawnPoint;
+                    }
                 }
 
                 return;
@@ -198,7 +216,10 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.ARStarterAssets
                         m_AttemptSpawn = !m_ARInteractor.hasSelection && !m_EverHadSelection;
                     break;
             }
+
+            
         }
+
     }
 }
 #endif

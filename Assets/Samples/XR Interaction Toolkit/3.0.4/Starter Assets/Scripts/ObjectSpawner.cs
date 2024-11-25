@@ -1,13 +1,10 @@
-using Codice.CM.Common.Serialization.Replication;
-using MacFsWatcher;
 using System;
 using System.Collections.Generic;
 using UnityEngine.EventSystems;
-
 using UnityEngine.XR.Interaction.Toolkit.Interactors;
 using UnityEngine.XR.Interaction.Toolkit.Utilities;
-
-
+using UnityEngine.XR.Interaction.Toolkit.Inputs.Readers;
+using UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets;
 namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
 {
     /// <summary>
@@ -258,7 +255,7 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
                 //setup text bubble
                 GameObject textBox = Instantiate(speechBubble);
                 textBox.transform.SetParent(newObject.transform);
-                textBox.transform.localPosition = new Vector3(1, 3, 0);
+                textBox.transform.localPosition = new Vector3(0, 2, 0);
 
                 return true;
             }
@@ -268,16 +265,33 @@ namespace UnityEngine.XR.Interaction.Toolkit.Samples.StarterAssets
             }
 
         }
-        //public void ResetAvatar()
-        //{
-        //    AvatarLocked = false;
-        //    print("Button Clicked");
-        //    if (prefabClone != null)
-        //    {
-        //        print("Clone Moved");
-        //        prefabClone.transform.position = new Vector3(0, 0, 0);
-        //    }
-        //}
+        
+        public void DestroyPrefabClone()
+        {
+            if(prefabClone != null)
+            {
+                print("DESTROYED");
+                Destroy(prefabClone);
+            }
+            else
+            {
+                print("prefabClone is null");
+            }
+            
+        }
+
+        public void MovePrefabClone(Vector3 spawnPoint, Vector3 spawnNormal)
+        {
+            if (prefabClone != null)
+            {
+                print("MOVED");
+                prefabClone.transform.position = (spawnPoint);
+            }
+            else
+            {
+                print("prefabClone is null");
+            }
+        }
 
     }
        
